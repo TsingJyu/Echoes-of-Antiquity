@@ -309,6 +309,32 @@
         }
         .overview-text strong { color: var(--palace-red); font-weight: 600; }
         
+        /* 社交媒體跳轉按鈕樣式 */
+        .social-matrix {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+        }
+        .social-matrix a {
+            display: block;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background-color: #fff;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s ease;
+        }
+        .social-matrix a:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+        }
+        .social-matrix img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .stats-block {
             background-color: #fff;
             padding: 60px 40px;
@@ -512,7 +538,6 @@
         </div>
 
         <div class="exhibition-item">
-            <!-- 💡 增加了 no-lightbox 與 bg-img 使其內部可以放大 -->
             <div class="exhibit-image has-image no-lightbox fade-left animate-on-scroll">
                 <div class="bg-img" style="background-image: url('DSC07037.PNG');"></div>
                 <div class="exhibit-meta" style="background: var(--gold-accent); color: var(--ink-black);">蔡宗齊 教授<span class="en-meta" style="color: var(--ink-black);">Prof. Zong-qi Cai</span></div>
@@ -537,6 +562,22 @@
                 
                 <p>透過這些平台，蔡教授致力於將深厚的學術積澱轉化為大眾普及的視聽內容，讓古典詩歌的魅力跨越國界與世代，搭建起一座連接傳統與現代、東方與西方的文化橋樑。</p>
                 <span class="en-desc">Through these platforms, Prof. Cai is dedicated to transforming profound academic research into accessible audiovisual content, allowing the charm of classical poetry to transcend borders and generations.</span>
+                
+                <!-- 💡 新增的社交媒體圖標矩陣 -->
+                <div class="social-matrix">
+                    <a href="https://space.bilibili.com/1002790226" target="_blank" title="Bilibili">
+                        <img src="Bilibili.png" alt="Bilibili">
+                    </a>
+                    <a href="https://www.youtube.com/@aigcsln" target="_blank" title="YouTube">
+                        <img src="YouTube.png" alt="YouTube">
+                    </a>
+                    <a href="https://xhslink.com/m/2sEbYoCpJXq" target="_blank" title="小紅書">
+                        <img src="Xiaohongshu.png" alt="小紅書">
+                    </a>
+                    <a href="https://v.douyin.com/YIuYm5OR0nc/" target="_blank" title="抖音">
+                        <img src="douyin.jpg" alt="抖音">
+                    </a>
+                </div>
             </div>
             <div class="stats-block zoom-in delay-200 animate-on-scroll">
                 <div class="stats-number">8,000,000+</div>
@@ -765,7 +806,6 @@
                 <span class="en-desc">Future plans include visiting Yueyang Tower and the Han River in Xiangyang for the Yangtze River chapter, as well as Wuwei in Gansu for the Frontier chapter. The goal is to leverage professional platforms to transform academic heritage into profound cultural tourism programs.</span>
             </div>
             
-            <!-- 💡 增加了 no-lightbox 與 bg-img 使其內部可以放大 -->
             <div class="exhibit-image has-image no-lightbox fade-right animate-on-scroll">
                 <div class="bg-img" style="background-image: url('ScreenShot_2026-04-02_121212_640.png');"></div>
                 <div class="exhibit-meta" style="background: var(--gold-accent); color: var(--ink-black);">素材儲備中<span class="en-meta" style="color: var(--ink-black);">Footage in Reserve</span></div>
