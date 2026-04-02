@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>弦歌不輟：中國古典詩歌的當代迴響 | Echoes of Antiquity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================
+           故宫主题色板与全局样式 (Style)
+        ========================================= */
+        :root {
+            --palace-red: #8C2222; /* 故宫红 */
+            --ink-black: #1A1A1A;  /* 黛黑 */
+            --paper-white: #F7F6F2; /* 宣纸白 */
+            --gold-accent: #B89758; /* 琉璃黄/描金 */
+            --light-grey: #E5E4DF;
+            --text-muted: #666666;
+            
+            /* 動畫緩動函數 (優雅絲滑) */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth; /* 平滑滾動 */
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper-white);
+            color: var(--ink-black);
+            line-height: 2;
+            overflow-x: hidden;
+            letter-spacing: 1px;
+        }
+
+        /* 自定義滾動條 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--paper-white); }
+        ::-webkit-scrollbar-thumb { background: #d0cec5; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold-accent); }
+
+        /* --- 頂部導航 --- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(247, 246, 242, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.4s ease;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: var(--palace-red);
+            width: 0%;
+            z-index: 1001;
+            transition: width 0.1s ease-out;
+        }
+
+        .nav-logo {
+            font-size: 1.3rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: var(--ink-black);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        .nav-logo:hover { opacity: 0.8; }
+        .nav-logo span { color: var(--palace-red); }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--ink-black);
+            font-size: 0.85rem;
+            transition: all 0.4s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.4;
+        }
+        .nav-links a .en-nav {
+            font-family: sans-serif;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            letter-spacing: 0;
+            transition: color 0.4s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px; left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 1.5px;
+            background: var(--palace-red);
+            transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover .en-nav { color: var(--palace-red); }
+        .nav-links a:hover { transform: translateY(-2px); }
+
+        /* --- 英雄區 --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10vw;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-layout {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 5vw;
+            z-index: 2;
+        }
+        .hero-title-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .hero-title {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: 20px;
+            color: var(--ink-black);
+            position: relative;
+        }
+        
+        .hero-title span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+        }
+
+        .hero-title::after {
+            content: "      ";
+            position: absolute;
+            bottom: -60px; left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            color: var(--paper-white);
+            background-color: var(--palace-red);
+            padding: 5px;
+            writing-mode: horizontal-tb;
+            letter-spacing: 0;
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 1s 1.5s;
+        }
+        .hero-title.loaded::after { opacity: 1; }
+
+        .hero-subtitle {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-family: sans-serif;
+            font-size: 1rem;
+            color: var(--text-muted);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+        
+        .hero-image {
+            flex-grow: 1;
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background-color: var(--light-grey);
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        @keyframes breathing {
+            0% { transform: scale(1) translate(-50%, -50%); }
+            100% { transform: scale(1.08) translate(-50%, -50%); }
+        }
+
+        .hero-image:not(.has-image)::before, .exhibit-image:not(.has-image)::before {
+            content: "16:9 畫面預留位 \A Image Placeholder";
+            white-space: pre-wrap;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+            text-align: center;
+            line-height: 1.6;
+            z-index: 1;
+        }
+        
+        .hero-image:not(.has-image)::after, .exhibit-image:not(.has-image)::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 120%; height: 120%;
+            background: linear-gradient(45deg, #e0dfd9, #ecebe6);
+            animation: breathing 15s infinite alternate ease-in-out;
+            z-index: 0;
+        }
+        .hero-image:not(.has-image)::before, .exhibit-image:not(.has-image)::before { z-index: 2; }
+
+        /* --- 章節通用 --- */
+        section { padding: 120px 10vw; overflow-x: hidden; }
+        .section-header {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 80px;
+            gap: 20px;
+        }
+        .section-num {
+            font-size: 4rem;
+            font-weight: 300;
+            color: var(--gold-accent);
+            line-height: 0.8;
+            opacity: 0.5;
+            font-family: sans-serif;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--ink-black);
+            position: relative;
+            padding-bottom: 10px;
+            line-height: 1.2;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 40px; height: 3px;
+            background: var(--palace-red);
+            transition: width 0.6s var(--ease-out-expo);
+        }
+        .animate-on-scroll.visible .section-title::after {
+            width: 100%;
+            max-width: 80px;
+        }
+        
+        .en-title {
+            display: block;
+            font-family: sans-serif;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+        .en-desc {
+            display: block;
+            font-family: sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        .en-meta {
+            display: block;
+            font-family: sans-serif;
+            font-size: 0.7rem;
+            opacity: 0.8;
+            margin-top: 3px;
+            letter-spacing: 1px;
+        }
+
+        /* --- 02. 概覽 --- */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .overview-text p {
+            font-size: 1.1rem;
+            color: var(--ink-black);
+            margin-bottom: 0.5rem;
+            text-align: justify;
+        }
+        .overview-text strong { color: var(--palace-red); font-weight: 600; }
+        
+        .stats-block {
+            background-color: #fff;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--palace-red);
+            position: relative;
+            overflow: hidden;
+        }
+        .stats-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            transform: skewX(-20deg);
+            animation: shine 4s infinite;
+        }
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+        
+        .stats-number {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--palace-red);
+            margin-bottom: 10px;
+            font-family: sans-serif;
+        }
+
+        /* --- 展品佈局 --- */
+        .exhibition-item {
+            display: grid;
+            grid-template-columns: 5.5fr 4.5fr;
+            gap: 60px;
+            margin-bottom: 120px;
+            align-items: center;
+        }
+        .exhibition-item:nth-child(even) { grid-template-columns: 4.5fr 5.5fr; }
+        .exhibition-item:nth-child(even) .exhibit-content { order: -1; }
+        
+        .exhibit-image {
+            width: 100%;
+            padding-top: 56.25%;
+            background-color: var(--light-grey);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+            transition: transform 0.6s var(--ease-out-expo), box-shadow 0.6s ease;
+            background-size: cover;
+            background-position: center;
+        }
+        .exhibit-image:hover { 
+            transform: translateY(-10px) scale(1.02); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        /* 💡 懸停遮罩與跳轉 Icon (燈箱效果) */
+        .hover-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            opacity: 0;
+            transition: opacity 0.4s var(--ease-out-expo);
+            z-index: 5;
+            backdrop-filter: blur(2px);
+        }
+        .exhibit-image:hover .hover-overlay { opacity: 1; }
+        
+        .icon-link {
+            transform: translateY(30px);
+            opacity: 0;
+            transition: transform 0.5s var(--ease-out-expo), opacity 0.5s;
+            text-decoration: none;
+        }
+        .exhibit-image:hover .icon-link:nth-child(1) { transform: translateY(0); opacity: 1; transition-delay: 0.05s; }
+        .exhibit-image:hover .icon-link:nth-child(2) { transform: translateY(0); opacity: 1; transition-delay: 0.1s; }
+        
+        .icon-link img {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+        .icon-link:hover img { transform: scale(1.15); }
+
+        .exhibit-meta {
+            position: absolute;
+            bottom: -1px; right: -1px;
+            background: var(--ink-black);
+            color: var(--paper-white);
+            padding: 12px 24px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-align: right;
+            z-index: 6;
+            transform: translateY(100%);
+            transition: transform 0.5s var(--ease-out-expo);
+        }
+        .animate-on-scroll.visible .exhibit-meta { transform: translateY(0); }
+
+        .exhibit-title {
+            font-size: 1.6rem;
+            color: var(--ink-black);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .exhibit-desc {
+            color: var(--ink-black);
+            margin-bottom: 5px;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
+        /* --- 深色區塊 --- */
+        .dark-section { background-color: var(--ink-black); color: var(--paper-white); }
+        .dark-section .section-title { color: var(--paper-white); }
+        .dark-section .section-num { color: rgba(255,255,255,0.1); }
+        .dark-section .exhibit-title { color: var(--gold-accent); }
+        .dark-section .exhibit-desc, .dark-section .overview-text p { color: #ddd; }
+        .dark-section .en-desc { color: #888; }
+        .dark-section .exhibit-image:not(.has-image)::after { background: linear-gradient(45deg, #2a2a2a, #333); }
+
+        /* --- 動畫類 --- */
+        .fade-up { opacity: 0; transform: translateY(50px); transition: opacity 1.2s var(--ease-out-expo), transform 1.2s var(--ease-out-expo); }
+        .fade-left { opacity: 0; transform: translateX(-60px); transition: opacity 1.2s var(--ease-out-expo), transform 1.2s var(--ease-out-expo); }
+        .fade-right { opacity: 0; transform: translateX(60px); transition: opacity 1.2s var(--ease-out-expo), transform 1.2s var(--ease-out-expo); }
+        .zoom-in { opacity: 0; transform: scale(0.92); transition: opacity 1.2s var(--ease-out-expo), transform 1.2s var(--ease-out-expo); }
+        .animate-on-scroll.visible { opacity: 1; transform: translate(0) scale(1); }
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+
+        /* --- 響應式 --- */
+        @media (max-width: 900px) {
+            .hero-layout, .overview-grid, .exhibition-item, .exhibition-item:nth-child(even) {
+                grid-template-columns: 1fr;
+                flex-direction: column;
+                gap: 40px;
+            }
+            .hero-title-wrapper { justify-content: center; margin-bottom: 40px; }
+            .hero-title { writing-mode: horizontal-tb; letter-spacing: 10px; font-size: 3rem; text-align: center;}
+            .hero-subtitle { writing-mode: horizontal-tb; }
+            .hero-title::after { display: none; }
+            section { padding: 80px 5vw; }
+            .nav-links { display: none; }
+            .fade-left, .fade-right { transform: translateY(40px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="progress-bar"></div>
+
+    <nav id="navbar">
+        <a href="#" class="nav-logo">弦歌<span>不輟</span>：中國古典詩歌的當代迴響</a>
+        <ul class="nav-links">
+            <li><a href="#profile">學者簡介<span class="en-nav">Profile</span></a></li>
+            <li><a href="#overview">全網影響<span class="en-nav">Impact</span></a></li>
+            <li><a href="#international">國際傳播<span class="en-nav">Global Reach</span></a></li>
+            <li><a href="#core">核心長片<span class="en-nav">Core Series</span></a></li>
+            <li><a href="#new-media">新媒體探索<span class="en-nav">New Media</span></a></li>
+            <li><a href="#explore">文旅延伸<span class="en-nav">Tourism</span></a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-layout">
+            <div class="hero-title-wrapper">
+                <h1 class="hero-title" id="hero-main-title" data-text="弦歌不輟"></h1>
+                <div class="hero-subtitle fade-up delay-300 animate-on-scroll">Echoes of Antiquity</div>
+            </div>
+            <div class="hero-image has-image zoom-in delay-200 animate-on-scroll" style="background-image: url('DSC07057.jpg');"></div>
+        </div>
+    </section>
+
+    <section id="profile" style="background-color: #fff;">
+        <div class="section-header fade-up animate-on-scroll">
+            <span class="section-num">01</span>
+            <h2 class="section-title">學者簡介<span class="en-title">Scholar Profile</span></h2>
+        </div>
+
+        <div class="exhibition-item">
+            <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('DSC07037.PNG');">
+                <div class="exhibit-meta" style="background: var(--gold-accent); color: var(--ink-black);">蔡宗齊 教授<span class="en-meta" style="color: var(--ink-black);">Prof. Zong-qi Cai</span></div>
+            </div>
+            <div class="exhibit-content fade-right animate-on-scroll delay-100">
+                <h3 class="exhibit-title">蔡宗齊<span class="en-title">Prof. Zong-qi Cai</span></h3>
+                <p class="exhibit-desc">蔡宗齊教授現任美國伊利諾伊州立大學香檳校區東亞語言文化系及比較文學系教授，並兼任香港嶺南大學中文系講座教授。他在古典詩歌、文學理論、比較文學、美學、比較哲學、經學和佛教等領域有著深入的研究和豐富的學術成果。</p>
+                <span class="en-desc">Professor Zong-qi Cai currently serves as Professor of East Asian Languages and Cultures and Comparative Literature at the University of Illinois at Urbana-Champaign, and holds the concurrent position of Chair Professor of Chinese at Lingnan University, Hong Kong. He possesses profound academic expertise and extensive publications in classical Chinese poetry, literary theory, comparative literature, aesthetics, comparative philosophy, Confucian classics, and Buddhism.</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="overview">
+        <div class="section-header fade-up animate-on-scroll">
+            <span class="section-num">02</span>
+            <h2 class="section-title">全網影響力<span class="en-title">Digital Impact</span></h2>
+        </div>
+        <div class="overview-grid">
+            <div class="overview-text fade-left animate-on-scroll">
+                <p><strong>平台矩陣：</strong>截至2026年3月，蔡教授的個人自媒體矩陣（@嶺南大學蔡宗齊老師 / AIGCS）在B站、YouTube、微信視頻號、小紅書、抖音全網已累計收穫超過800萬次播放。</p>
+                <span class="en-desc"><strong>Digital Matrix:</strong> As of March 2026, Professor Cai's social media channels (@嶺南大學蔡宗齊老師 / AIGCS) have accumulated over 8 million global views across platforms including Bilibili, YouTube, WeChat Video, Xiaohongshu, and Douyin.</span>
+                
+                <p>透過這些平台，蔡教授致力於將深厚的學術積澱轉化為大眾普及的視聽內容，讓古典詩歌的魅力跨越國界與世代，搭建起一座連接傳統與現代、東方與西方的文化橋樑。</p>
+                <span class="en-desc">Through these platforms, Prof. Cai is dedicated to transforming profound academic research into accessible audiovisual content, allowing the charm of classical poetry to transcend borders and generations.</span>
+            </div>
+            <div class="stats-block zoom-in delay-200 animate-on-scroll">
+                <div class="stats-number">8,000,000+</div>
+                <div style="font-size: 1.1rem; color: var(--ink-black); letter-spacing: 2px; font-weight: 600;">全網累計播放量</div>
+                <div style="font-family: sans-serif; font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; text-transform: uppercase;">Total Global Views</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="international" style="background-color: #fff;">
+        <div class="section-header fade-up animate-on-scroll">
+            <span class="section-num">03</span>
+            <h2 class="section-title">國際傳播：跨文化對話<span class="en-title">Global Reach: Cross-Cultural Dialogues</span></h2>
+        </div>
+
+        <div class="exhibition-item">
+            <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('橫圖2.png');">
+                <div class="hover-overlay">
+                    <a href="https://www.youtube.com/playlist?list=PLXhhvZMr6NJklJi5iEbVmMxmwHsg4y-o4" target="_blank" class="icon-link" title="在 YouTube 觀看">
+                        <img src="YouTube.png" alt="YouTube">
+                    </a>
+                    <a href="https://space.bilibili.com/1002790226/lists/7316355?type=season" target="_blank" class="icon-link" title="在 Bilibili 觀看">
+                        <img src="Bilibili.png" alt="Bilibili">
+                    </a>
+                </div>
+                <div class="exhibit-meta">共55集 · 熱播中<span class="en-meta">55 Episodes · Airing</span></div>
+            </div>
+            <div class="exhibit-content fade-right animate-on-scroll delay-100">
+                <h3 class="exhibit-title">《如何閱讀中國詩歌》英文視頻<span class="en-title">"How to Read Chinese Poetry" Videos</span></h3>
+                <p class="exhibit-desc">基於哥倫比亞大學出版社同名書籍製作的55集英文視頻。節目保留純正英文講解與中英雙語朗讀，並配以中國古典琴樂背景。</p>
+                <span class="en-desc">Based on the acclaimed book by Columbia University Press. This 55-episode English video series features English explanations, bilingual readings, and classical Guqin music.</span>
+            </div>
+        </div>
+        
+        <div class="exhibition-item">
+            <div class="exhibit-content fade-left animate-on-scroll delay-100">
+                <h3 class="exhibit-title">《唐詩之音韻》英文版<span class="en-title">The Phonology of Tang Poetry (English)</span></h3>
+                <p class="exhibit-desc">蔡教授使用英文，為國際觀眾系統講解唐詩的音韻特點、格律結構（如五言、七言律詩構建）以及閱讀技巧，並巧妙融入了中西思維模式對比（如十四行詩與律詩）等跨文化元素。</p>
+                <span class="en-desc">Professor Cai systematically explains the phonological features, metrical structures (such as five- and seven-character regulated verse), and reading techniques of Tang poetry in English. He cleverly integrates cross-cultural elements, including comparisons between Chinese and Western poetic forms like sonnets and regulated verse.</span>
+            </div>
+            <div class="exhibit-image has-image fade-right animate-on-scroll" style="background-image: url('d4c2f8f077be75399150999384463fd0bd37af92.jpg');">
+                <div class="hover-overlay">
+                    <a href="https://www.youtube.com/playlist?list=PLXhhvZMr6NJmcG0bKszaLAFh0zV8sucf_" target="_blank" class="icon-link" title="在 YouTube 觀看">
+                        <img src="YouTube.png" alt="YouTube">
+                    </a>
+                    <a href="https://space.bilibili.com/1002790226/lists/839763?type=season" target="_blank" class="icon-link" title="在 Bilibili 觀看">
+                        <img src="Bilibili.png" alt="Bilibili">
+                    </a>
+                </div>
+                <div class="exhibit-meta">共8集 · 已完結<span class="en-meta">8 Episodes · Completed</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="core">
+        <div class="section-header fade-up animate-on-scroll">
+            <span class="section-num">04</span>
+            <h2 class="section-title">核心長視頻：古典詩詞的系統性科普<span class="en-title">Core Video Series: A Systematic Exploration</span></h2>
+        </div>
+
+        <div class="exhibition-item">
+            <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('4ab4afe555c3948c3fb9f62c35181a63dc263d3d\ \(1\).jpg');">
+                <div class="hover-overlay">
+                    <a href="https://www.youtube.com/playlist?list=PLXhhvZMr6NJkHbx14_Ng6l3Aql71kofcr" target="_blank" class="icon-link" title="在 YouTube 觀看">
+                        <img src="YouTube.png" alt="YouTube">
+                    </a>
+                    <a href="https://space.bilibili.com/1002790226/lists/1091526?type=season" target="_blank" class="icon-link" title="在 Bilibili 觀看">
+                        <img src="Bilibili.png" alt="Bilibili">
+                    </a>
+                </div>
+                <div class="exhibit-meta">共36集 · 已完結<span class="en-meta">36 Episodes · Completed</span></div>
+            </div>
+            <div class="exhibit-content fade-right animate-on-scroll delay-100">
+                <h3 class="exhibit-title">《唐詩之意境》系列<span class="en-title">The Artistic Worlds of Tang Poetry</span></h3>
+                <p class="exhibit-desc">深挖唐詩意境，結合豐富的文學知識，系統講解古典詩詞中的意象與結構。</p>
+                <span class="en-desc">Delving into the artistic realms of Tang poetry, this series systematically explains the imagery and structure of classical poems with rich literary insights.</span>
+            </div>
+        </div>
+
+        <div class="exhibition-item">
+            <div class="exhibit-content fade-left animate-on-scroll delay-100">
+                <h3 class="exhibit-title">《唐詩之音韻》系列<span class="en-title">The Phonology of Tang Poetry</span></h3>
+                <p class="exhibit-desc">蔡教授獨創「蔡氏近體詩格律簡易推演法」，結合中古漢語四聲，用極簡方式拆解格律詩的構建規則。</p>
+                <span class="en-desc">Professor Cai introduces his original "Simplified Deduction Method for Recent-Style Poetry Metre," breaking down the construction rules of metrical poetry.</span>
+            </div>
+            <div class="exhibit-image has-image fade-right animate-on-scroll" style="background-image: url('cd77980b7e6326c82090c04ca268eec0971d7b69.jpg');">
+                <div class="hover-overlay">
+                    <a href="https://www.youtube.com/playlist?list=PLXhhvZMr6NJlwiicSsc-lc8iQ54pCaYnR" target="_blank" class="icon-link" title="在 YouTube 觀看">
+                        <img src="YouTube.png" alt="YouTube">
+                    </a>
+                    <a href="https://space.bilibili.com/1002790226/lists/2372767?type=season" target="_blank" class="icon-link" title="在 Bilibili 觀看">
+                        <img src="Bilibili.png" alt="Bilibili">
+                    </a>
+                </div>
+                <div class="exhibit-meta">共9集 · 已完結<span class="en-meta">9 Episodes · Completed</span></div>
+            </div>
+        </div>
+
+        <div class="exhibition-item">
+            <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('8016946f93a443b2c4ea09dec6cfa7734ca6effb.jpg');">
+                <div class="hover-overlay">
+                    <a href="https://www.youtube.com/playlist?list=PLXhhvZMr6NJlB4dJlUPZoAmeCUiTdxbnF" target="_blank" class="icon-link" title="在 YouTube 觀看">
+                        <img src="YouTube.png" alt="YouTube">
+                    </a>
+                    <a href="https://space.bilibili.com/1002790226/lists/4562371?type=season" target="_blank" class="icon-link" title="在 Bilibili 觀看">
+                        <img src="Bilibili.png" alt="Bilibili">
+                    </a>
+                </div>
+                <div class="exhibit-meta">共32集 · 已完結<span class="en-meta">32 Episodes · Completed</span></div>
+            </div>
+            <div class="exhibit-content fade-right animate-on-scroll delay-100">
+                <h3 class="exhibit-title">《唐詩之意境》粵語版<span class="en-title">The Artistic Worlds of Tang Poetry (Cantonese)</span></h3>
+                <p class="exhibit-desc">面向粵語區觀眾定制，配以粵語朗誦及吟誦。</p>
+                <span class="en-desc">Tailored for Cantonese-speaking audiences, featuring traditional Cantonese recitation and chanting. Currently ongoing with 5 episodes released.</span>
+            </div>
+        </div>
+
+        <div class="exhibition-item">
+            <div class="exhibit-content fade-left animate-on-scroll delay-100">
+                <h3 class="exhibit-title">《唐詩之意境》古詩篇<span class="en-title">The Artistic Worlds of Tang Poetry (Ancient-Style)</span></h3>
+                <p class="exhibit-desc">古體詩是重要的古代詩詞文體，和樂府詩並稱為「漢代文學雙璧」。</p>
+                <span class="en-desc">Ancient-style poetry (Gushi) is a crucial genre of classical Chinese poetry, acclaimed alongside Yuefu poetry as the "Twin Jewels of Han Dynasty Literature".</span>
+            </div>
+            <div class="exhibit-image has-image fade-right animate-on-scroll" style="background-image: url('image_cd423f.jpg');">
+                <div class="hover-overlay">
+                    <a href="https://www.youtube.com/playlist?list=PLXhhvZMr6NJkYJYeZxKWqT510JtXQ0u9S" target="_blank" class="icon-link" title="在 YouTube 觀看">
+                        <img src="YouTube.png" alt="YouTube">
+                    </a>
+                    <a href="https://space.bilibili.com/1002790226/lists/6595605?type=season" target="_blank" class="icon-link" title="在 Bilibili 觀看">
+                        <img src="Bilibili.png" alt="Bilibili">
+                    </a>
+                </div>
+                <div class="exhibit-meta">共10集 · 已完結<span class="en-meta">10 Episodes · Completed</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="new-media" style="background-color: #fff;">
+        <div class="section-header fade-up animate-on-scroll">
+            <span class="section-num">05</span>
+            <h2 class="section-title">新媒體探索與青年受眾<span class="en-title">New Media & Youth Engagement</span></h2>
+        </div>
+
+        <div class="exhibition-item">
+            <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('高考.png');">
+                <div class="hover-overlay">
+                    <a href="https://weibo.com/u/7734211871" target="_blank" class="icon-link" title="在 Weibo 觀看">
+                        <img src="Sina_Weibo_logo.svg" alt="Weibo">
+                    </a>
+                </div>
+                <div class="exhibit-meta">短視頻 · 已播125集<span class="en-meta">Shorts · 125 Episodes</span></div>
+            </div>
+            <div class="exhibit-content fade-right animate-on-scroll delay-100">
+                <h3 class="exhibit-title">時令短視頻<span class="en-title">Seasonal Short Videos</span></h3>
+                <p class="exhibit-desc">以當下的季節、節氣、大事件等為題材，結合古詩欣賞的内容，更容易獲得網路的關注。如《2025高考作文解析》系列、《端午》系列。</p>
+                <span class="en-desc">Focusing on current seasons, solar terms, and major events, these short videos blend classical poetry appreciation with trending topics to capture online attention, featuring series like "2025 College Entrance Exam Essay Analysis" and "Dragon Boat Festival".</span>
+            </div>
+        </div>
+
+        <div class="exhibition-item">
+            <div class="exhibit-content fade-left animate-on-scroll delay-100">
+                <h3 class="exhibit-title">和蔡老師面對面<span class="en-title">Face to Face with Prof. Cai</span></h3>
+                <p class="exhibit-desc">記錄老教授轉變為UP主的心路歷程及創作初衷。</p>
+                <span class="en-desc">Documenting the senior professor's journey and original intentions of becoming a modern content creator.</span>
+            </div>
+            <div class="exhibit-image has-image fade-right animate-on-scroll" style="background-image: url('DSC08579-Enhanced-NR.jpg');">
+                <div class="hover-overlay">
+                    <a href="https://www.youtube.com/playlist?list=PLXhhvZMr6NJlFNtTT_gYDc0qwalJHmS2-" target="_blank" class="icon-link" title="在 YouTube 觀看">
+                        <img src="YouTube.png" alt="YouTube">
+                    </a>
+                    <a href="https://space.bilibili.com/1002790226/lists/1311846?type=season" target="_blank" class="icon-link" title="在 Bilibili 觀看">
+                        <img src="Bilibili.png" alt="Bilibili">
+                    </a>
+                </div>
+                <div class="exhibit-meta">面對面 · 已播12集<span class="en-meta">Vlogs · 12 Episodes</span></div>
+            </div>
+        </div>
+
+        <div class="exhibition-item">
+            <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('工作坊ppt.png');">
+                <div class="hover-overlay">
+                    <a href="https://space.bilibili.com/1002790226/lists/3385058?type=season" target="_blank" class="icon-link" title="在 Bilibili 觀看">
+                        <img src="Bilibili.png" alt="Bilibili">
+                    </a>
+                </div>
+                <div class="exhibit-meta">青年共創<span class="en-meta">Youth Co-creation</span></div>
+            </div>
+            <div class="exhibit-content fade-right animate-on-scroll delay-100">
+                <h3 class="exhibit-title">2024暑期影視實習工作坊作品<span class="en-title">2024 Summer Film Workshop Projects</span></h3>
+                <p class="exhibit-desc">收錄嶺南大學學生參與創作的短片，展示青年一代對古典詩詞的影視化表達。</p>
+                <span class="en-desc">Featuring short films co-created by Lingnan University students, showcasing the younger generation's innovative cinematic interpretations of classical poetry.</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="explore" class="dark-section">
+        <div class="section-header fade-up animate-on-scroll">
+            <span class="section-num">06</span>
+            <h2 class="section-title">探索與延伸：中華大地文旅<span class="en-title">Exploration: Cultural Tourism</span></h2>
+        </div>
+
+        <div class="exhibition-item">
+            <!-- 💡 已加入深度游.png並添加微博跳轉鏈接 -->
+            <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('深度游.png');">
+                <div class="hover-overlay">
+                    <a href="https://weibo.com/tv/show/1034:5144252879929352?mid=5144535895116019" target="_blank" class="icon-link" title="在 Weibo 觀看">
+                        <img src="Sina_Weibo_logo.svg" alt="Weibo">
+                    </a>
+                </div>
+                <div class="exhibit-meta" style="background: var(--gold-accent); color: var(--ink-black);">文旅聯動試播<span class="en-meta" style="color: var(--ink-black);">Tourism Pilot</span></div>
+            </div>
+            <div class="exhibit-content fade-right animate-on-scroll delay-100">
+                <h3 class="exhibit-title">微博試播情況<span class="en-title" style="color: var(--gold-accent);">Weibo Pilot Broadcast</span></h3>
+                <p class="exhibit-desc">目前在微博平台試播了《唐詩深度遊》短視頻系列。該系列利用現有學術視頻素材進行了二次剪輯，其中結合香港伶仃洋實地取景的《過零丁洋》篇已正式播出，作為「詩詞+文旅」模式的初步嘗試。</p>
+                <span class="en-desc">Currently piloting the "In-Depth Tour of Tang Poetry" short video series on Weibo. The series utilizes existing academic video footage for re-editing, and the episode "Crossing Lingdingyang," featuring on-site footage from Lingdingyang in Hong Kong, has officially aired as an initial attempt at the "Poetry + Tourism" model.</span>
+            </div>
+        </div>
+
+        <div class="exhibition-item">
+            <div class="exhibit-content fade-left animate-on-scroll delay-100">
+                <h3 class="exhibit-title">實地素材儲備<span class="en-title" style="color: var(--gold-accent);">Field Footage Reserves</span></h3>
+                <p class="exhibit-desc">除了已播出的香港伶仃洋素材，節目組已前往武漢黃鶴樓完成了《登黃鶴樓》的核心實景畫面拍攝。目前該素材暫未剪輯釋出，計劃尋找更優質的視聽平台與製作資源進行匹配發酵。</p>
+                <span class="en-desc" style="margin-bottom: 35px;">In addition to the aired Lingdingyang footage, the team has traveled to the Yellow Crane Tower in Wuhan to complete the core location shooting for "Climbing the Yellow Crane Tower." This footage is currently unedited, pending partnerships with premium audiovisual platforms and production resources.</span>
+                
+                <h3 class="exhibit-title">後續尋訪計劃<span class="en-title" style="color: var(--gold-accent);">Future Expeditions</span></h3>
+                <p class="exhibit-desc">該項目後續計劃探訪長江篇的岳陽樓（《登岳陽樓》）、襄陽漢江（《漢江臨眺》），以及塞外篇的甘肅武威（《涼州詞》）。期望能借助更專業的平台力量，將學術積澱轉化為深度的文旅視聽節目。</p>
+                <span class="en-desc">Future plans include visiting Yueyang Tower and the Han River in Xiangyang for the Yangtze River chapter, as well as Wuwei in Gansu for the Frontier chapter. The goal is to leverage professional platforms to transform academic heritage into profound cultural tourism programs.</span>
+            </div>
+            <div class="exhibit-image has-image fade-right animate-on-scroll" style="background-image: url('ScreenShot_2026-04-02_121212_640.png');">
+                <div class="exhibit-meta" style="background: var(--gold-accent); color: var(--ink-black);">素材儲備中<span class="en-meta" style="color: var(--ink-black);">Footage in Reserve</span></div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="background: #111; color: #555; text-align: center; padding: 40px; font-size: 0.8rem; letter-spacing: 2px; font-family: sans-serif;">
+        © 2026 Zong-qi Cai. Echoes of Antiquity. 
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            // 1. Hero Title 逐字出現動畫設定
+            const titleElement = document.getElementById("hero-main-title");
+            const text = titleElement.getAttribute("data-text");
+            titleElement.innerHTML = "";
+            
+            [...text].forEach((char, index) => {
+                const span = document.createElement("span");
+                span.innerText = char;
+                span.style.transitionDelay = `${index * 0.2}s`;
+                titleElement.appendChild(span);
+                
+                setTimeout(() => {
+                    span.style.opacity = "1";
+                    span.style.transform = "translateY(0)";
+                }, 100);
+            });
+            setTimeout(() => {
+                titleElement.classList.add("loaded");
+            }, text.length * 200 + 500);
+
+            // 2. 滾動出現動畫 (Intersection Observer)
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            animatedElements.forEach(element => {
+                observer.observe(element);
+            });
+
+            // 3. 頂部閱讀進度條
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById("progress-bar").style.width = scrolled + "%";
+            });
+        });
+    </script>
+</body>
+</html>
