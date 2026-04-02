@@ -368,6 +368,19 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.15);
         }
 
+        /* 💡 專門為「無燈箱照片」設計的內部圖片放大效果 */
+        .bg-img {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.8s var(--ease-out-expo);
+            z-index: 1;
+        }
+        .exhibit-image.no-lightbox:hover .bg-img {
+            transform: scale(1.08);
+        }
+
         /* 💡 懸停遮罩與跳轉 Icon (燈箱效果) */
         .hover-overlay {
             position: absolute;
@@ -499,7 +512,9 @@
         </div>
 
         <div class="exhibition-item">
-            <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('DSC07037.PNG');">
+            <!-- 💡 增加了 no-lightbox 與 bg-img 使其內部可以放大 -->
+            <div class="exhibit-image has-image no-lightbox fade-left animate-on-scroll">
+                <div class="bg-img" style="background-image: url('DSC07037.PNG');"></div>
                 <div class="exhibit-meta" style="background: var(--gold-accent); color: var(--ink-black);">蔡宗齊 教授<span class="en-meta" style="color: var(--ink-black);">Prof. Zong-qi Cai</span></div>
             </div>
             <div class="exhibit-content fade-right animate-on-scroll delay-100">
@@ -724,7 +739,6 @@
         </div>
 
         <div class="exhibition-item">
-            <!-- 💡 已加入深度游.png並添加微博跳轉鏈接 -->
             <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('深度游.png');">
                 <div class="hover-overlay">
                     <a href="https://weibo.com/tv/show/1034:5144252879929352?mid=5144535895116019" target="_blank" class="icon-link" title="在 Weibo 觀看">
@@ -750,7 +764,10 @@
                 <p class="exhibit-desc">該項目後續計劃探訪長江篇的岳陽樓（《登岳陽樓》）、襄陽漢江（《漢江臨眺》），以及塞外篇的甘肅武威（《涼州詞》）。期望能借助更專業的平台力量，將學術積澱轉化為深度的文旅視聽節目。</p>
                 <span class="en-desc">Future plans include visiting Yueyang Tower and the Han River in Xiangyang for the Yangtze River chapter, as well as Wuwei in Gansu for the Frontier chapter. The goal is to leverage professional platforms to transform academic heritage into profound cultural tourism programs.</span>
             </div>
-            <div class="exhibit-image has-image fade-right animate-on-scroll" style="background-image: url('ScreenShot_2026-04-02_121212_640.png');">
+            
+            <!-- 💡 增加了 no-lightbox 與 bg-img 使其內部可以放大 -->
+            <div class="exhibit-image has-image no-lightbox fade-right animate-on-scroll">
+                <div class="bg-img" style="background-image: url('ScreenShot_2026-04-02_121212_640.png');"></div>
                 <div class="exhibit-meta" style="background: var(--gold-accent); color: var(--ink-black);">素材儲備中<span class="en-meta" style="color: var(--ink-black);">Footage in Reserve</span></div>
             </div>
         </div>
