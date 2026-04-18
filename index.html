@@ -394,7 +394,7 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.15);
         }
 
-        /* 💡 專門為「無燈箱照片」設計的內部圖片放大效果 */
+        /* 內部圖片放大效果 */
         .bg-img {
             position: absolute;
             inset: 0;
@@ -407,7 +407,7 @@
             transform: scale(1.08);
         }
 
-        /* 💡 懸停遮罩與跳轉 Icon (燈箱效果) */
+        /* 懸停遮罩與跳轉 Icon (燈箱效果) */
         .hover-overlay {
             position: absolute;
             inset: 0;
@@ -429,8 +429,10 @@
             transition: transform 0.5s var(--ease-out-expo), opacity 0.5s;
             text-decoration: none;
         }
-        .exhibit-image:hover .icon-link:nth-child(1) { transform: translateY(0); opacity: 1; transition-delay: 0.05s; }
-        .exhibit-image:hover .icon-link:nth-child(2) { transform: translateY(0); opacity: 1; transition-delay: 0.1s; }
+        .exhibit-image:hover .icon-link:nth-child(1),
+        .work-card-img:hover .icon-link:nth-child(1) { transform: translateY(0); opacity: 1; transition-delay: 0.05s; }
+        .exhibit-image:hover .icon-link:nth-child(2),
+        .work-card-img:hover .icon-link:nth-child(2) { transform: translateY(0); opacity: 1; transition-delay: 0.1s; }
         
         .icon-link img {
             width: 55px;
@@ -469,6 +471,66 @@
             text-align: justify;
         }
 
+        /* --- 代表作品子欄目 (16:9 展示) --- */
+        .works-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            padding-top: 25px;
+        }
+        .work-card {
+            width: 100%;
+        }
+        .work-card-img {
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 */
+            background-color: var(--light-grey);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.4s ease;
+        }
+        .work-card:hover .work-card-img {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        .work-card-title {
+            font-size: 0.95rem;
+            color: var(--ink-black);
+            margin-top: 12px;
+            font-weight: 600;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .work-card-img .hover-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            transition: opacity 0.4s var(--ease-out-expo);
+            backdrop-filter: blur(2px);
+        }
+        .work-card-img:hover .hover-overlay { opacity: 1; }
+        
+        .work-card-img .icon-link { transform: translateY(15px); }
+        .work-card-img .icon-link img {
+            width: 38px;
+            height: 38px;
+        }
+
         /* --- 深色區塊 --- */
         .dark-section { background-color: var(--ink-black); color: var(--paper-white); }
         .dark-section .section-title { color: var(--paper-white); }
@@ -502,6 +564,10 @@
             section { padding: 80px 5vw; }
             .nav-links { display: none; }
             .fade-left, .fade-right { transform: translateY(40px); }
+        }
+
+        @media (max-width: 600px) {
+            .works-showcase { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -563,7 +629,6 @@
                 <p>透過這些平台，蔡教授致力於將深厚的學術積澱轉化為大眾普及的視聽內容，讓古典詩歌的魅力跨越國界與世代，搭建起一座連接傳統與現代、東方與西方的文化橋樑。</p>
                 <span class="en-desc">Through these platforms, Prof. Cai is dedicated to transforming profound academic research into accessible audiovisual content, allowing the charm of classical poetry to transcend borders and generations.</span>
                 
-                <!-- 💡 新增的社交媒體圖標矩陣 -->
                 <div class="social-matrix">
                     <a href="https://space.bilibili.com/1002790226" target="_blank" title="Bilibili">
                         <img src="Bilibili.png" alt="Bilibili">
@@ -638,8 +703,9 @@
             <h2 class="section-title">核心長視頻：古典詩詞的系統性科普<span class="en-title">Core Video Series: A Systematic Exploration</span></h2>
         </div>
 
+        <!-- 01. 《唐詩之意境》系列 -->
         <div class="exhibition-item">
-            <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('4ab4afe555c3948c3fb9f62c35181a63dc263d3d\ \(1\).jpg');">
+            <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('4ab4afe555c3948c3fb9f62c35181a63dc263d3d (1).jpg');">
                 <div class="hover-overlay">
                     <a href="https://www.youtube.com/playlist?list=PLXhhvZMr6NJkHbx14_Ng6l3Aql71kofcr" target="_blank" class="icon-link" title="在 YouTube 觀看">
                         <img src="YouTube.png" alt="YouTube">
@@ -653,15 +719,58 @@
             <div class="exhibit-content fade-right animate-on-scroll delay-100">
                 <h3 class="exhibit-title">《唐詩之意境》系列<span class="en-title">The Artistic Worlds of Tang Poetry</span></h3>
                 <p class="exhibit-desc">深挖唐詩意境，結合豐富的文學知識，系統講解古典詩詞中的意象與結構。</p>
-                <span class="en-desc">Delving into the artistic realms of Tang poetry, this series systematically explains the imagery and structure of classical poems with rich literary insights.</span>
+                <p class="exhibit-desc" style="margin-top: 10px;">繼英文播客提升國際影響力之後，再次策劃了中文視頻節目，旨在為漢語世界的詩歌愛好者帶來具有深度的古典詩歌解讀。</p>
+                
+                <div class="works-showcase">
+                    <div class="work-card">
+                        <div class="work-card-img" style="background-image: url('denghuanghelou.jpg');">
+                            <div class="hover-overlay">
+                                <a href="https://youtu.be/2pGunO2mB98?si=QnkWq6h-QssBB4JL" target="_blank" class="icon-link" title="在 YouTube 觀看"><img src="YouTube.png" alt="YouTube"></a>
+                                <a href="https://www.bilibili.com/video/BV1bh411V78G/" target="_blank" class="icon-link" title="在 Bilibili 觀看"><img src="Bilibili.png" alt="Bilibili"></a>
+                            </div>
+                        </div>
+                        <div class="work-card-title">《登黃鶴樓》</div>
+                    </div>
+                    <div class="work-card">
+                        <div class="work-card-img" style="background-image: url('jinse.jpg');">
+                            <div class="hover-overlay">
+                                <a href="https://youtu.be/u3KQ7yR1Szk?si=jf2kmIbE6YT-g60t" target="_blank" class="icon-link" title="在 YouTube 觀看"><img src="YouTube.png" alt="YouTube"></a>
+                                <a href="https://www.bilibili.com/video/BV1qN411C7ro" target="_blank" class="icon-link" title="在 Bilibili 觀看"><img src="Bilibili.png" alt="Bilibili"></a>
+                            </div>
+                        </div>
+                        <div class="work-card-title">《錦瑟》</div>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- 02. 《唐詩之音韻》系列 -->
         <div class="exhibition-item">
             <div class="exhibit-content fade-left animate-on-scroll delay-100">
                 <h3 class="exhibit-title">《唐詩之音韻》系列<span class="en-title">The Phonology of Tang Poetry</span></h3>
                 <p class="exhibit-desc">蔡教授獨創「蔡氏近體詩格律簡易推演法」，結合中古漢語四聲，用極簡方式拆解格律詩的構建規則。</p>
-                <span class="en-desc">Professor Cai introduces his original "Simplified Deduction Method for Recent-Style Poetry Metre," breaking down the construction rules of metrical poetry.</span>
+                <p class="exhibit-desc" style="margin-top: 10px;">第二系列通過分析中古聲調在粵語中的遺存，挖掘近體詩格律的基本原則，推廣律句、律聯、律絕、律詩的平仄形式，從而理解唐詩韻律所蘊含的中華文化和價值觀。</p>
+                
+                <div class="works-showcase">
+                    <div class="work-card">
+                        <div class="work-card-img" style="background-image: url('yinyun9.jpg');">
+                            <div class="hover-overlay">
+                                <a href="https://youtu.be/HN4LQDtvkr4?si=h1bDRD2tAR8F8mZM" target="_blank" class="icon-link" title="在 YouTube 觀看"><img src="YouTube.png" alt="YouTube"></a>
+                                <a href="https://www.bilibili.com/video/BV1st421c7h1/" target="_blank" class="icon-link" title="在 Bilibili 觀看"><img src="Bilibili.png" alt="Bilibili"></a>
+                            </div>
+                        </div>
+                        <div class="work-card-title">《「二四六分明」與傳統格律變動規則的不足》</div>
+                    </div>
+                    <div class="work-card">
+                        <div class="work-card-img" style="background-image: url('yinyun7.jpg');">
+                            <div class="hover-overlay">
+                                <a href="https://youtu.be/npvAcxqVHXk?si=vlxtDFVpwd9Ot4A_" target="_blank" class="icon-link" title="在 YouTube 觀看"><img src="YouTube.png" alt="YouTube"></a>
+                                <a href="https://www.bilibili.com/video/BV1ex421m7G6" target="_blank" class="icon-link" title="在 Bilibili 觀看"><img src="Bilibili.png" alt="Bilibili"></a>
+                            </div>
+                        </div>
+                        <div class="work-card-title">《傳統格律歸類偏誤：冗雜分類原因》</div>
+                    </div>
+                </div>
             </div>
             <div class="exhibit-image has-image fade-right animate-on-scroll" style="background-image: url('cd77980b7e6326c82090c04ca268eec0971d7b69.jpg');">
                 <div class="hover-overlay">
@@ -676,6 +785,7 @@
             </div>
         </div>
 
+        <!-- 03. 《唐詩之意境》粵語版 -->
         <div class="exhibition-item">
             <div class="exhibit-image has-image fade-left animate-on-scroll" style="background-image: url('8016946f93a443b2c4ea09dec6cfa7734ca6effb.jpg');">
                 <div class="hover-overlay">
@@ -691,15 +801,58 @@
             <div class="exhibit-content fade-right animate-on-scroll delay-100">
                 <h3 class="exhibit-title">《唐詩之意境》粵語版<span class="en-title">The Artistic Worlds of Tang Poetry (Cantonese)</span></h3>
                 <p class="exhibit-desc">面向粵語區觀眾定制，配以粵語朗誦及吟誦。</p>
-                <span class="en-desc">Tailored for Cantonese-speaking audiences, featuring traditional Cantonese recitation and chanting. Currently ongoing with 5 episodes released.</span>
+                <p class="exhibit-desc" style="margin-top: 10px;">本次粵語版節目是對前述節目的延續和拓展，通過本土化的語言和表達方式，讓更多粵語地區的觀眾感受唐詩的魅力。蔡教授特別邀請了《明報月刊》編輯、詩人張志豪吟誦選詩，力求通過粵語這一親切的語言橋樑，促進區域內文化共鳴和連結。</p>
+                
+                <div class="works-showcase">
+                    <div class="work-card">
+                        <div class="work-card-img" style="background-image: url('yonghuaiguji.jpg');">
+                            <div class="hover-overlay">
+                                <a href="https://youtu.be/aTHV2bcb4sg?si=UwEdlFbdoNGLItVd" target="_blank" class="icon-link" title="在 YouTube 觀看"><img src="YouTube.png" alt="YouTube"></a>
+                                <a href="https://www.bilibili.com/video/BV1UYG2z8E2F/" target="_blank" class="icon-link" title="在 Bilibili 觀看"><img src="Bilibili.png" alt="Bilibili"></a>
+                            </div>
+                        </div>
+                        <div class="work-card-title">《詠懷古蹟其三》</div>
+                    </div>
+                    <div class="work-card">
+                        <div class="work-card-img" style="background-image: url('guolingdingyang.jpg');">
+                            <div class="hover-overlay">
+                                <a href="https://youtu.be/8rhgvZkzdXc?si=fN-gzPlKHi6CmaIL" target="_blank" class="icon-link" title="在 YouTube 觀看"><img src="YouTube.png" alt="YouTube"></a>
+                                <a href="https://www.bilibili.com/video/BV1ZQ51zLETm" target="_blank" class="icon-link" title="在 Bilibili 觀看"><img src="Bilibili.png" alt="Bilibili"></a>
+                            </div>
+                        </div>
+                        <div class="work-card-title">《過零丁洋》</div>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- 04. 《唐詩之意境》古詩篇 -->
         <div class="exhibition-item">
             <div class="exhibit-content fade-left animate-on-scroll delay-100">
                 <h3 class="exhibit-title">《唐詩之意境》古詩篇<span class="en-title">The Artistic Worlds of Tang Poetry (Ancient-Style)</span></h3>
                 <p class="exhibit-desc">古體詩是重要的古代詩詞文體，和樂府詩並稱為「漢代文學雙璧」。</p>
-                <span class="en-desc">Ancient-style poetry (Gushi) is a crucial genre of classical Chinese poetry, acclaimed alongside Yuefu poetry as the "Twin Jewels of Han Dynasty Literature".</span>
+                <p class="exhibit-desc" style="margin-top: 10px;">在律詩篇、絕句篇後，古詩篇將補齊唐詩的最後一塊拼圖。該系列梳理古體詩「篇法組織」的特點，洞見章法結構與語勢變化；切入詩人情感表達，釐清古體詩的審美旨趣；並結合詩篇細讀與文學史知識，把握唐詩整體的傳統與脈絡。</p>
+                
+                <div class="works-showcase">
+                    <div class="work-card">
+                        <div class="work-card-img" style="background-image: url('qiangjinjiu.jpg');">
+                            <div class="hover-overlay">
+                                <a href="https://youtu.be/sPMJYf8Y_Ks?si=8BzBRM8iO6eHDbdb" target="_blank" class="icon-link" title="在 YouTube 觀看"><img src="YouTube.png" alt="YouTube"></a>
+                                <a href="https://www.bilibili.com/video/BV1gVybBVEKt" target="_blank" class="icon-link" title="在 Bilibili 觀看"><img src="Bilibili.png" alt="Bilibili"></a>
+                            </div>
+                        </div>
+                        <div class="work-card-title">《將進酒》</div>
+                    </div>
+                    <div class="work-card">
+                        <div class="work-card-img" style="background-image: url('gushipian3.jpg');">
+                            <div class="hover-overlay">
+                                <a href="https://youtu.be/WJWCJxkmMCI?si=gydFBioLWcXHgKQG" target="_blank" class="icon-link" title="在 YouTube 觀看"><img src="YouTube.png" alt="YouTube"></a>
+                                <a href="https://www.bilibili.com/video/BV1d42gBBEVz" target="_blank" class="icon-link" title="在 Bilibili 觀看"><img src="Bilibili.png" alt="Bilibili"></a>
+                            </div>
+                        </div>
+                        <div class="work-card-title">《淡人王維 vs 李白濃人》</div>
+                    </div>
+                </div>
             </div>
             <div class="exhibit-image has-image fade-right animate-on-scroll" style="background-image: url('image_cd423f.jpg');">
                 <div class="hover-overlay">
